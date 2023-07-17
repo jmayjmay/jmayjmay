@@ -1,7 +1,72 @@
 <!DOCTYPE html>
 <html>
-<body>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<script src='https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js'></script>
+<style> circle {fill: lightblue; stroke: black;} </style>
+
+<body onload='init()'>
 <h1>Hello World</h1>
 <p>I'm hosted with GitHub Pages.</p>
+
+<svg width=600 height=600>
+</svg>
+<script>
+async function init() {
+
+//const data = await d3.csv('https://flunky.github.io/cars2017.csv');
+//const data = await d3.csv('https://raw.githubusercontent.com/jmayjmay/jmayjmay.github.io/blob/main/USvideos_processed.csv');
+const data = await d3.csv('https://jmayjmay.github.io/USvideos_processed.csv');
+
+
+//const city = data.map(d => +d.AverageCityMPG);
+//var cxs= d3.scaleLinear().domain([0, 150]).range([0,400]);
+//var xs = city.map(value => cxs(value));
+//const high = data.map(d => +d.AverageHighwayMPG);
+//var cys= d3.scaleLinear().domain([0, 150]).range([400, 0]);
+//var ys = high.map(value => cys(value));
+
+const likes = data.map(d => +d.likes);
+var xlike = d3.scaleLinear().domain([0, 150]).range([0,400]);
+var xs = likes.map(value => xlike(value));
+const dislikes = data.map(d => +d.dislikes);
+var ydis= d3.scaleLinear().domain([0, 150]).range([400, 0]);
+var ys = dislikes.map(value => ydis(value));
+
+var margin = {top: 50, right: 50, bottom: 50, left: 50};
+d3.select('svg')
+.append('g')
+.attr("transform","translate(50,50)")
+.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+.selectAll('circle')
+.data(data)
+.enter()
+.append('circle')
+.attr('cx',function(d,i) {return xs[i];})
+.attr('cy',function(d,i) {return ys[i];})
+.attr('r', 4 );
+
+
+const yAxis = d3.axisLeft(ys).tickValues([10,20,50,100]);
+const xAxis = d3.axisBottom(xs).tickValues([10,20,50,100]);
+
+d3.select("svg").append("g")
+.attr("transform","translate("+50+","+50+")")
+.attr("fill", "none")
+.attr("font-size", "10") 
+.attr("font-family", "sans-serif") 
+.attr("text-anchor", "end")
+.call(yAxis)
+
+d3.select("svg").append("g")
+.attr("transform","translate("+50+","+250+")")
+.attr("fill", "none")
+.attr("font-size", "10") 
+.attr("font-family", "sans-serif") 
+.attr("text-anchor", "end")
+.call(xAxis)
+
+
+}
+</script>
 </body>
 </html>
