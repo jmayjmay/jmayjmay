@@ -16,6 +16,8 @@ var DislkesLikes={
 
         var category_name = data.map(rec => rec["category_name"]);
         category_name = [...new Set(category_name)].sort();
+        category_colors = category_name;
+        category_name = ["All"].concat(category_name);
         var title = data.map(rec => rec["title"]);
         var channel_title = data.map(rec => rec["channel_title"]);
         //var startDate = new Date('2023-09-12'); 
@@ -23,7 +25,7 @@ var DislkesLikes={
         //var dates = data.map(d => new Date(d.dates));
         //var xdates = d3.scaleTime().domain([startDate,endDate]).range([0,400]);
         //var xDates = dates.map(value => xdates(value));
-        var colorScale = d3.scaleOrdinal().domain(category_name)
+        var colorScale = d3.scaleOrdinal().domain(category_colors)
         .range(["#c49c94", "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#aec7e8", "#ffbb78", "#98df8a", "#ff9896", "#c5b0d5"]);
 
         d3.select("#DislkesLikes").append("div")
@@ -83,6 +85,20 @@ var DislkesLikes={
             .call(xAxis)
         //refreshChart("comedy");   
 
+        svg.append("text")
+            .attr("class", "x-axis-title")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2 + 25) 
+            .attr("y", height + margin.top + 30) 
+            .text("Likes");
+        svg.append("text")
+            .attr("class", "y-axis-title")
+            .attr("text-anchor", "middle")
+            .attr("x", -height / 2 -10) 
+            .attr("y", margin.left - 35) 
+            .attr("transform", "rotate(" + -90 + ")") 
+            .text("Dislikes");
+
 //============================================= Legend Box ========================================================
         var legend = svg.append("g")
             .attr("class", "legend")
@@ -90,7 +106,7 @@ var DislkesLikes={
         var legendBoxSize = 18;
         var legendSpacing = 6;
         var legendItems = legend.selectAll(".legend-item")
-            .data(category_name)
+            .data(category_colors)
             .enter()
             .append("g")
             .attr("class", "legend-item")
@@ -111,8 +127,13 @@ var DislkesLikes={
         d3.select("#DislkesLikes").selectAll("svg").remove();
         d3.select("#DislkesLikes").selectAll("g").remove();
     
-        var unfilteredData = data;
-        var filteredData = data.filter(d => d.category_name === category);
+        if(category === "All"){
+            var unfilteredData = data;
+            var filteredData = data;
+        } else {
+            var unfilteredData = data;
+            var filteredData = data.filter(d => d.category_name === category);
+        }
 
         var svg = d3.select("#DislkesLikes").append("svg")
             .attr("width", width + 4*margin.left)
@@ -160,7 +181,7 @@ var DislkesLikes={
         var legendBoxSize = 18;
         var legendSpacing = 6;
         var legendItems = legend.selectAll(".legend-item")
-            .data(category_name)
+            .data(category_colors)
             .enter()
             .append("g")
             .attr("class", "legend-item")
@@ -175,7 +196,19 @@ var DislkesLikes={
             .attr("dy", "0.35em")
             .text(function(d) { return d; });
 //=====================================================================================================
-
+        svg.append("text")
+            .attr("class", "x-axis-title")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2 + 25) 
+            .attr("y", height + margin.top + 30) 
+            .text("Likes");
+        svg.append("text")
+            .attr("class", "y-axis-title")
+            .attr("text-anchor", "middle")
+            .attr("x", -height / 2 -10) 
+            .attr("y", margin.left - 35) 
+            .attr("transform", "rotate(" + -90 + ")") 
+            .text("Dislikes");
 //============================================= Annotation Code ========================================================
             const type = d3.annotationCalloutElbow
             const Slide1annotations = [{
